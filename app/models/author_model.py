@@ -14,7 +14,7 @@ class Author(db.Model):
     password = db.Column(db.String(15), nullable = False)
     image = db.Column(db.String(255), nullable = True) 
     bio = db.Column(db.String(200), nullable = False)
-    type = db.Column(db.String(200), nullable = False)
+    type = db.Column(db.String(200), nullable = False, default='Author')
     created_at = db.Column(db.DateTime, default =datetime.now())
     updated_at = db.Column(db.DateTime, onupdate = datetime.now())
 
@@ -32,4 +32,8 @@ class Author(db.Model):
         self.updated_at = updated_at
             
     def author_info(self):
-        print(f' {self.first_name} {self.last_name} ')   
+        if self.first_name and self.last_name:
+            
+            return(f' {self.first_name} {self.last_name} ')   
+        
+        return None

@@ -9,19 +9,22 @@ auth = Blueprint('auth', __name__,url_prefix='/api/v1/auth')
 
 # Author registration
 
-@auth.route('/register',methods=['POST'])
+@auth.route('/register',methods=['POST'])       #decorator to point tp oint to the blueprint    Methods for creating a new user
 def register_author():
     data = request.json                 #variable to store the requets
-    # storing request values
+    
+    # storing request values and keep track of them
     first_name = data.get('first_name')
     last_name = data.get('last_name')
     contact = data.get('contact')
     email = data.get('email')
     password = data.get('password')
-    type = data.get('type')
+    type = data.get('type') if 'author_type' in data else 'author'
     bio = data.get('bio','')if type == 'author' else ''
     
-    #validation of the incoming requets
+    
+    # reducing redundancy ie reputation and empty values ie checking for null values.
+    #validation of the incoming requets.
     
     if not first_name or not last_name or not contact or not password or not email:
         return jsonify({
@@ -48,17 +51,31 @@ def register_author():
     try:
         hashed_password = bcrypt.generate_password_hash(password) #hashing the password
         
-        #creating a new user
-        new_author = Author(first_name,last_name,password=hashed_password,email=email,contact=contact,bio = bio,type=type)
+        
+        new_author = Author(
+        first_name=first_name,
+        last_name=last_name,
+        password=hashed_password,
+        email=email,
+        contact=contact,
+        bio=bio,
+        type=type
+        )
+        
         db.session.add(new_author)
         db.session.commit()
         
         #keeping track of the author name
         author_name =new_author.author_info()
         
+        if author_name is None:
+            author_name = " Author"
+            
+            
         return jsonify({
-            'message': author_name + 'has been successfully craeted as an' + new_author.type,
+            'message': author_name  + ' has been successfully craeted as an ' + new_author.type,
             'user':{
+                'id':new_author.id,
                 'first_name':new_author.first_name,
                 'last_name':new_author.last_name,
                 'email':new_author.email,
