@@ -5,7 +5,7 @@
 # any extension that we work with we have to regiter it here
 # Application factory function(Define the app instance within the function) helps to rellate with different 3rd party libraries
 from flask import Flask
-from app.extensions import db,migrate
+from app.extensions import db,migrate,jwt
 from app.controllers.auth.auth_controller import auth
 
 def create_app():
@@ -15,6 +15,7 @@ def create_app():
     app.config.from_object('config.Config')     # access the config 
     db.init_app(app)   # intialize the db instance
     migrate.init_app(app,db)    #initialize the migrate instance
+    jwt.init_app(app)
    
     
     

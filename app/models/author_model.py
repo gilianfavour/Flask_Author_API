@@ -11,7 +11,7 @@ class Author(db.Model):
     last_name = db.Column(db.String(20), nullable = False)
     contact = db.Column(db.Integer, nullable = False)
     email = db.Column(db.String(30), nullable = False, unique = True)
-    password = db.Column(db.String(15), nullable = False)
+    password = db.Column(db.String(255), nullable = False)
     image = db.Column(db.String(255), nullable = True) 
     bio = db.Column(db.String(200), nullable = False)
     type = db.Column(db.String(200), nullable = False, default='Author')
